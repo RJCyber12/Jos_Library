@@ -1,0 +1,13 @@
+{% extends 'books/base.html' %}
+
+{% block content %}
+<h1>Authors</h1>
+<ul class="list-group">
+    {% for author in authors %}
+    <li class="list-group-item">
+        {{ author.name }}
+        <small class="text-muted">- {{ author.books.count }} books</small>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
