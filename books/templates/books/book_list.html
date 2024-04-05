@@ -9,23 +9,34 @@
 <pre>Num found: {{ numFound }}</pre>
 <pre>Error: {{ error }}</pre>
 
+<form action="{% url 'book-list' %}" method="get">
+    <input type="text" name="query" value="{{ query }}" placeholder="Search for books...">
+    <button type="submit">Search</button>
+</form>
 
-<div class="row">
-    {% for book in books %}
-    <div class="col-md-4 mb-3">
-        <div class="card">
-            <img src="http://covers.openlibrary.org/b/id/{{ book.cover_i }}-M.jpg" class="card-img-top" alt="{{ book.title }}">
-            <div class="card-body">
-                <h5 class="card-title">{{ book.title }}</h5>
-                <p class="card-text">Author: {{ book.author_name|join:", " }}</p>
-                <a href="{% url 'book-detail' book.key|split:'/'|split:'-' %}" class="btn btn-primary">More Details</a>
-            </div>
+{% for book in books %}
+<div class="col-md-4 mb-3">
+    <div class="card" style="width: 18rem;">
+        {% if book.cover_i %}
+        <img src="http://covers.openlibrary.org/b/id/{{ book.cover_i }}-L.jpg" class="card-img-top" alt="Cover image of {{ book.title }}">
+        {% else %}
+        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Default cover image">
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{ book.title }}</h5>
+            {% if book.author_name %}
+            <p class="card-text">Author: {{ book.author_name|join:", " }}</p>
+            {% else %}
+            <p class="card-text">Author information not available</p>
+            {% endif %}
+            <!-- Here, you might need to adjust the URL for 'More Details' based on how your URL routing is set up for book details -->
+            <a href="{% url 'book-detail' book.key|split:'/' %}" class="btn btn-primary">More Details</a>
         </div>
     </div>
-    {% empty %}
-    <p>No books found.</p>
-    {% endfor %}
 </div>
+{% empty %}
+<p>No books found{% if query %} for "{{ query }}"{% endif %}.</p>
+{% endfor %}
 
 <!-- Pagination -->
 <div class="pagination">

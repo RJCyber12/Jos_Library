@@ -20,22 +20,17 @@ class BookListView(View):
         page = int(request.GET.get('page', 1))
         items_per_page = 20
         start = (page - 1) * items_per_page  # Calculate start offset
-        # Temporarily hardcode a query for testing
-        query = 'harry potter'
-        #query = request.GET.get('query', '')  # Get the search query
+        query = request.GET.get('query', '')  # Get the search query
+        data = {}  # Initialize data as an empty dictionary
 
         try:
-            # Include the 'query' in the URL
             url = f"https://openlibrary.org/search.json?q={query}&start={start}&limit={items_per_page}"
-            logger.debug(f"API URL: {url}")  # Log the URL being called
-
             response = requests.get(url)
             response.raise_for_status()
+            data = response.json()  # Now data will be assigned with API response or remain empty
 
-            data = response.json()
-            context['books'] = data['docs']
-            context['numFound'] = data['numFound']
-            # Calculate if next/previous pages exist
+            context['books'] = data.get('docs', [])
+            context['numFound'] = data.get('numFound', 0)
             context['has_previous'] = page > 1
             context['has_next'] = start + len(context['books']) < context['numFound']
             context['next_page'] = page + 1
@@ -43,10 +38,11 @@ class BookListView(View):
         except requests.RequestException as e:
             context['error'] = str(e)
 
-        # Add the 'query' to the context to be used in the template
-        context['query'] = query
+        # Since data is initialized as {}, using .get() will safely return default values if not set
+        context['query'] = query  # Include the search query in context for use in the template
 
         return render(request, self.template_name, context)
+
 
 
 class AuthorListView(View):
