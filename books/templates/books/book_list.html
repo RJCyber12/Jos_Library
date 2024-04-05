@@ -1,19 +1,44 @@
 {% extends 'books/base.html' %}
+{% load book_filters %}
 
 {% block content %}
 <h1>Books</h1>
+
+<!-- Temporarily output raw context data for debugging -->
+<pre>{{ books|safe }}</pre>
+<pre>Num found: {{ numFound }}</pre>
+<pre>Error: {{ error }}</pre>
+
+
 <div class="row">
     {% for book in books %}
     <div class="col-md-4 mb-3">
         <div class="card">
-            <img src="{{ book.cover_image.url }}" class="card-img-top" alt="{{ book.title }}">
+            <img src="http://covers.openlibrary.org/b/id/{{ book.cover_i }}-M.jpg" class="card-img-top" alt="{{ book.title }}">
             <div class="card-body">
                 <h5 class="card-title">{{ book.title }}</h5>
-                <p class="card-text">{{ book.summary }}</p>
-                <a href="#" class="btn btn-primary">More Details</a>
+                <p class="card-text">Author: {{ book.author_name|join:", " }}</p>
+                <a href="{% url 'book-detail' book.key|split:'/'|split:'-' %}" class="btn btn-primary">More Details</a>
             </div>
         </div>
     </div>
+    {% empty %}
+    <p>No books found.</p>
     {% endfor %}
 </div>
+
+<!-- Pagination -->
+<div class="pagination">
+    {% if has_previous %}
+    <!-- Use the 'query' variable from the context -->
+    <a href="?page={{ previous_page }}&query={{ query }}" class="btn btn-light">Previous</a>
+    {% endif %}
+    {% if has_next %}
+    <!-- Use the 'query' variable from the context -->
+    <a href="?page={{ next_page }}&query={{ query }}" class="btn btn-light">Next</a>
+    {% endif %}
+</div>
+
+
+
 {% endblock %}
