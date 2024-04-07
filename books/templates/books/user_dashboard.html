@@ -1,0 +1,20 @@
+{% extends 'books/base.html' %}
+
+{% block content %}
+<h2>My Shelf</h2>
+
+{% if shelf.books.all %}
+<ul>
+    {% for book in shelf.books.all %}
+    <li>
+        <h3>{{ book.title }}</h3>
+        <p>Author: {{ book.author.name }}</p>
+        <!-- Display other book details as needed -->
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>Your shelf is empty. Add some books!</p>
+{% endif %}
+
+{% endblock %}

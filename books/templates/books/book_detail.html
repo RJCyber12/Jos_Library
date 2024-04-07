@@ -3,14 +3,24 @@
 
 {% block content %}
 <h1>{{ book.title }}</h1>
-{% if book.authors %}
-<p>Authors: {{ book.authors|join:", " }}</p>
-{% endif %}
-{% if book.summary %}
-<p>Summary: {{ book.summary }}</p>
+<p>Author: {{ book.author_name }}</p>
+{% if book.publish_date %}
+<p>Publish Date: {{ book.publish_date }}</p>
 {% endif %}
 {% if book.cover_id %}
 <img src="http://covers.openlibrary.org/b/id/{{ book.cover_id }}-L.jpg" alt="{{ book.title }} cover">
+{% endif %}
+{% if book.error %}
+<p>Error: {{ book.error }}</p>
+{% endif %}
+<!-- Add the form to add the book to the shelf -->
+{% if user.is_authenticated %}
+    <form action="{% url 'add-to-shelf' book.openlibrary_id %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Add to Shelf</button>
+    </form>
+{% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to add this book to your shelf.</p>
 {% endif %}
 <!-- Add more details as needed -->
 {% endblock %}

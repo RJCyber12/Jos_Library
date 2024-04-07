@@ -17,6 +17,8 @@
 {% for book in books %}
 <div class="col-md-4 mb-3">
     <div class="card" style="width: 18rem;">
+        <pre>OpenLibrary ID: {{ book.openlibrary_id }}</pre>
+
         {% if book.cover_i %}
         <img src="http://covers.openlibrary.org/b/id/{{ book.cover_i }}-L.jpg" class="card-img-top" alt="Cover image of {{ book.title }}">
         {% else %}
@@ -29,8 +31,9 @@
             {% else %}
             <p class="card-text">Author information not available</p>
             {% endif %}
+            
             <!-- Here, you might need to adjust the URL for 'More Details' based on how your URL routing is set up for book details -->
-            <a href="{% url 'book-detail' book.key|split:'/' %}" class="btn btn-primary">More Details</a>
+            <a href="{% url 'book-detail' book.openlibrary_id %}" class="btn btn-primary">More Details</a>
         </div>
     </div>
 </div>
