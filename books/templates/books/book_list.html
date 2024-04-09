@@ -4,7 +4,7 @@
 {% block content %}
 <h1>Books</h1>
 
-<!-- Temporarily output raw context data for debugging -->
+<!-- raw context for debugging -->
 <pre>{{ books|safe }}</pre>
 <pre>Num found: {{ numFound }}</pre>
 <pre>Error: {{ error }}</pre>
@@ -32,7 +32,7 @@
             <p class="card-text">Author information not available</p>
             {% endif %}
             
-            <!-- Here, you might need to adjust the URL for 'More Details' based on how your URL routing is set up for book details -->
+            <!-- button to more details (bookdetailview) -->
             <a href="{% url 'book-detail' book.openlibrary_id %}" class="btn btn-primary">More Details</a>
         </div>
     </div>
@@ -44,11 +44,11 @@
 <!-- Pagination -->
 <div class="pagination">
     {% if has_previous %}
-    <!-- Use the 'query' variable from the context -->
+    <!-- use the 'query' from context -->
     <a href="?page={{ previous_page }}&query={{ query }}" class="btn btn-light">Previous</a>
     {% endif %}
     {% if has_next %}
-    <!-- Use the 'query' variable from the context -->
+    <!-- use the 'query' from context -->
     <a href="?page={{ next_page }}&query={{ query }}" class="btn btn-light">Next</a>
     {% endif %}
 </div>

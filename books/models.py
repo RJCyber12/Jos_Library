@@ -58,7 +58,7 @@ class Author(models.Model):
 class Book(models.Model):
     openlibrary_id = models.CharField(max_length=255, unique=True)
     title = models.CharField(max_length=100)
-    author = models.ForeignKey(Author, related_name='books', on_delete=models.CASCADE)
+    authors = models.ManyToManyField('Author', related_name='books')
     cover_image = models.ImageField(upload_to='covers/', blank=True, null=True)
     rating = models.FloatField(default=0.0)
 
@@ -69,13 +69,8 @@ class Book(models.Model):
 class Shelf(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='shelves')
     books = models.ManyToManyField(Book, related_name='shelves')
-    name = models.CharField(max_length=255, default='My Shelf')  # Optional: For future use if you want named shelves
+    name = models.CharField(max_length=255, default='My Shelf')
 
     def __str__(self):
         return f"{self.user}'s shelf"
-
-
-
-
-
 

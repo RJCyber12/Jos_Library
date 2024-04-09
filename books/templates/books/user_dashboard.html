@@ -1,20 +1,32 @@
 {% extends 'books/base.html' %}
 
 {% block content %}
-<h2>My Shelf</h2>
 
-{% if shelf.books.all %}
-<ul>
-    {% for book in shelf.books.all %}
-    <li>
-        <h3>{{ book.title }}</h3>
-        <p>Author: {{ book.author.name }}</p>
-        <!-- Display other book details as needed -->
-    </li>
-    {% endfor %}
-</ul>
-{% else %}
-<p>Your shelf is empty. Add some books!</p>
-{% endif %}
-
+<div class="container mt-4">
+    <h1>My Shelf</h1>
+    <div class="row">
+        {% for book in shelf.books.all %}
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <img src="{% if book.cover_image %}{{ book.cover_image.url }}{% else %}path/to/default/image.jpg{% endif %}" class="card-img-top" alt="{{ book.title }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ book.title }}</h5>
+                    <p class="card-text">
+                        Authors: 
+                        {% for author in book.authors.all %}
+                        {{ author.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    <!-- Edit Button -->
+                    <a href="{% url 'edit-book' book.id %}" class="btn btn-primary">Edit</a>
+                    <!-- Delete Button -->
+                    <a href="{% url 'book-confirm-delete' book.id %}" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No books found on your shelf.</p>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
